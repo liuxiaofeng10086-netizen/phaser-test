@@ -2,9 +2,11 @@ import { OBJECT_FRAMES } from "../data/frames";
 import { getPersistedState, setPersistedState } from "../state/gameState";
 import { GridObject } from "./GridObject";
 
+// 交互冷却/等待帮助函数
 const delay = (scene, ms) =>
     new Promise(resolve => scene.time.delayedCall(ms, resolve));
 
+// 可交互对象基类
 class InteractableObject extends GridObject {
     constructor(options) {
         super(options);
@@ -22,6 +24,7 @@ class InteractableObject extends GridObject {
     async onInteract() {}
 }
 
+// 咖啡机：只可交互一次
 export class CoffeeMachine extends InteractableObject {
     constructor(options) {
         super({
@@ -42,6 +45,7 @@ export class CoffeeMachine extends InteractableObject {
     }
 }
 
+// 工位：交互切换状态
 export class Workstation extends InteractableObject {
     constructor(options) {
         super({
@@ -65,6 +69,7 @@ export class Workstation extends InteractableObject {
     }
 }
 
+// 僵尸植物：交互切换状态
 export class ZombiePlant extends InteractableObject {
     constructor(options) {
         super({
@@ -89,6 +94,7 @@ export class ZombiePlant extends InteractableObject {
     }
 }
 
+// 披萨拾取：触发器 + 持久化
 export class PizzaPickup extends GridObject {
     constructor({ scene, world, tileX, tileY, sceneId }) {
         const name = `pizza-${tileX}-${tileY}`;
@@ -135,6 +141,7 @@ export class ScenePortal extends InteractableObject {
         });
         this.target = target;
         this.enterDirection = enterDirection;
+        // 传送点不显示精灵，仅保留交互逻辑
         this.sprite.setVisible(false);
     }
 
@@ -145,6 +152,7 @@ export class ScenePortal extends InteractableObject {
     }
 }
 
+// 装饰植物：阻挡
 export class Plant extends GridObject {
     constructor(options) {
         super({

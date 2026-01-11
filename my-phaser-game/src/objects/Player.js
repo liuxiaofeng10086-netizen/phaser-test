@@ -3,6 +3,7 @@ import { PLAYER_FRAMES, UI_FRAMES } from "../data/frames";
 import { gameState } from "../state/gameState";
 import { GridMover } from "./GridMover";
 
+// 玩家对象：键盘移动 + 鼠标寻路 + 路径可视化
 export class Player extends GridMover {
     constructor({ scene, world, tileX, tileY }) {
         super({
@@ -26,6 +27,7 @@ export class Player extends GridMover {
         this.processingPath = false;
         this.pointerPath = [];
 
+        // 指针与路径点渲染
         this.pointerIndicator = scene.add.sprite(0, 0, "ui", UI_FRAMES.select);
         this.pointerIndicator.setOrigin(0.5, 0.5);
         this.pointerIndicator.setAlpha(0.5);
@@ -43,6 +45,7 @@ export class Player extends GridMover {
             d: "D"
         });
 
+        // 左键点击寻路
         scene.input.on("pointerdown", pointer => {
             if (pointer.button !== 0) return;
             this.handlePointerClick(pointer);
@@ -64,6 +67,7 @@ export class Player extends GridMover {
             return;
         }
 
+        // 允许终点为可交互对象
         const path = this.world.findPath(
             { x: this.tileX, y: this.tileY },
             tile,
@@ -111,12 +115,14 @@ export class Player extends GridMover {
         const nextX = this.tileX + dirX;
         const nextY = this.tileY + dirY;
 
+        // 禁止对角穿角
         if (!this.canMoveDiagonal(nextX, nextY)) return;
         if (!this.world.isWalkable(nextX, nextY, { ignore: this })) return;
 
         this.setPath([{ x: nextX, y: nextY }], false);
     }
 
+    // 执行路径：移动或在最后一步触发交互
     async processPathStep() {
         if (!this.path.length || this.processingPath) return;
         this.processingPath = true;
@@ -136,6 +142,7 @@ export class Player extends GridMover {
         this.processingPath = false;
     }
 
+    // 绘制路径点与指针高亮
     updateOverlay(pointer) {
         const pointerTile = this.getPointerTile(pointer);
         const inBounds =
@@ -197,6 +204,7 @@ export class Player extends GridMover {
         this.processPathStep();
         this.updateOverlay(this.scene.input.activePointer);
 
+        // 简化版呼吸/抖动动效
         if (!this.isMoving) {
             const breath = 1 + Math.sin(time / 240) / 20;
             this.sprite.setScale(1, breath);

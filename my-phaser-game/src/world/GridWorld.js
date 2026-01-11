@@ -2,6 +2,7 @@ import { TILE_SIZE } from "../config";
 import { findPath } from "../utils/pathfinding";
 import { isWithinBounds, tileToWorld, worldToTile } from "../utils/grid";
 
+// 不同层级的深度偏移
 const LAYER_OFFSETS = {
     ground: 0,
     obstacle: 0.2,
@@ -21,6 +22,7 @@ export class GridWorld {
         this.objects = [];
     }
 
+    // 瓦片坐标 <-> 世界坐标
     tileToWorld(tileX, tileY) {
         return tileToWorld(tileX, tileY, this.tileSize, this.height);
     }
@@ -33,6 +35,7 @@ export class GridWorld {
         return worldY + (LAYER_OFFSETS[layer] ?? 0);
     }
 
+    // 注册/移除世界对象
     addObject(obj) {
         this.objects.push(obj);
     }
@@ -45,6 +48,7 @@ export class GridWorld {
         return isWithinBounds(tileX, tileY, this.width, this.height);
     }
 
+    // 获取指定格子的对象
     getObjectsAt(tileX, tileY, { includeDisabled = false } = {}) {
         return this.objects.filter(obj => {
             if (!includeDisabled && obj.disabled) return false;
@@ -59,6 +63,7 @@ export class GridWorld {
         );
     }
 
+    // 走格子碰撞检测
     isWalkable(tileX, tileY, { ignore } = {}) {
         if (!this.isWithinBounds(tileX, tileY)) return false;
         if (this.isWall(tileX, tileY)) return false;
@@ -74,6 +79,7 @@ export class GridWorld {
         return this.getObjectsAt(tileX, tileY).some(obj => obj.interactable);
     }
 
+    // 触发格子上的交互对象
     async interactAt(tileX, tileY, actor) {
         const interactables = this.getObjectsAt(tileX, tileY).filter(
             obj => obj.interactable && !obj.disabled
@@ -83,6 +89,7 @@ export class GridWorld {
         return true;
     }
 
+    // 触发触发器（如拾取物）
     handleTriggersAt(tileX, tileY, actor) {
         const triggers = this.getObjectsAt(tileX, tileY).filter(
             obj => obj.isTrigger && !obj.disabled
@@ -90,6 +97,7 @@ export class GridWorld {
         triggers.forEach(obj => obj.onTrigger?.(actor));
     }
 
+    // 生成寻路用网格，支持交互点作为终点
     buildGrid({ destination, allowDestinationOnInteractable, allowOccupiedBy } = {}) {
         const grid = [];
         for (let y = 0; y < this.height; y += 1) {
@@ -124,11 +132,13 @@ export class GridWorld {
         return grid;
     }
 
+    // A* 寻路封装
     findPath(from, to, options) {
         const grid = this.buildGrid(options);
         return findPath(grid, from, to);
     }
 
+    // 移动脚印特效
     spawnFootstep(tileX, tileY) {
         const { x, y } = this.tileToWorld(tileX, tileY);
         const sprite = this.scene.add.sprite(x, y, "footstep", 0);

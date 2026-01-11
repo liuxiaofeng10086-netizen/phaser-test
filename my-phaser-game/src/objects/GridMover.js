@@ -1,6 +1,7 @@
 import { MOVE_DURATION } from "../config";
 import { GridObject } from "./GridObject";
 
+// 支持按格移动的对象基类
 export class GridMover extends GridObject {
     constructor(options) {
         super(options);
@@ -10,6 +11,7 @@ export class GridMover extends GridObject {
         this.idleFrame = options.idleFrame;
     }
 
+    // 异步移动到目标格子（含移动动画与脚印）
     async moveTo(tileX, tileY) {
         if (this.isMoving) return false;
         if (!this.world.isWalkable(tileX, tileY, { ignore: this })) return false;
@@ -31,6 +33,7 @@ export class GridMover extends GridObject {
 
         this.world.spawnFootstep(fromTileX, fromTileY);
 
+        // 走路动画
         if (this.walkAnimation) {
             this.sprite.anims.play(this.walkAnimation, true);
         }

@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import { gameState } from "../state/gameState";
 
+// UI 场景：血条与文本
 export class UiScene extends Phaser.Scene {
     constructor() {
         super({ key: "ui" });
@@ -16,6 +17,7 @@ export class UiScene extends Phaser.Scene {
             .image(margin, bottom, "health-empty")
             .setOrigin(0, 1);
 
+        // 让血条高度固定为 20px
         const scale = 20 / this.healthEmpty.height;
         this.healthEmpty.setScale(scale);
 
@@ -35,6 +37,7 @@ export class UiScene extends Phaser.Scene {
         this.updateHealth();
     }
 
+    // 根据全局状态刷新血条
     updateHealth() {
         const { hp, maxHp } = gameState.player;
         if (hp === this.lastHp && maxHp === this.lastMaxHp) return;

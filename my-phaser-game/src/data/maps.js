@@ -1,5 +1,6 @@
 import { mapDataString } from "../utils/grid";
 
+// 通过字符串生成网格，并反转 Y 轴以匹配 bottom-left 原点
 const officeMap = mapDataString(`
 # # # # # # # # # # # # # # # # #
 # . W T # T . . W T . W . . . T #
@@ -19,6 +20,7 @@ const otherMap = mapDataString(`
 # # # # # #
 `).reverse();
 
+// 场景配置：地图、出生点、传送门与敌人
 export const SCENES = {
     office: {
         map: officeMap,

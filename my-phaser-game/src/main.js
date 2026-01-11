@@ -4,7 +4,7 @@ import { OfficeScene } from "./scenes/OfficeScene";
 import { OtherScene } from "./scenes/OtherScene";
 import { UiScene } from "./scenes/UiScene";
 
-// More information about config: https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
+// Phaser 游戏配置
 const config = {
     type: Phaser.AUTO,
     parent: "phaser-container",
@@ -17,10 +17,12 @@ const config = {
         width: 960,
         height: 540
     },
+    // 自适应缩放
     scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH
     },
+    // 顺序：预加载 -> 办公室/其他 -> UI
     scene: [Preloader, OfficeScene, OtherScene, UiScene]
 };
 

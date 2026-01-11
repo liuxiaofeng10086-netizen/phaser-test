@@ -15,6 +15,7 @@ import { Zombie } from "../objects/Zombie";
 import { gameState } from "../state/gameState";
 import { GridWorld } from "../world/GridWorld";
 
+// 通用网格场景：加载地图、角色、交互与相机
 export class GridScene extends Phaser.Scene {
     constructor(sceneKey, sceneId) {
         super({ key: sceneKey });
@@ -44,6 +45,7 @@ export class GridScene extends Phaser.Scene {
         this.setupZoomControls();
     }
 
+    // 绘制地面与墙体
     buildMap(mapData) {
         for (let y = 0; y < this.world.height; y += 1) {
             for (let x = 0; x < this.world.width; x += 1) {
@@ -59,6 +61,7 @@ export class GridScene extends Phaser.Scene {
         }
     }
 
+    // 根据地图字符生成交互物体
     buildObjects(mapData) {
         for (let y = 0; y < this.world.height; y += 1) {
             for (let x = 0; x < this.world.width; x += 1) {
@@ -97,6 +100,7 @@ export class GridScene extends Phaser.Scene {
         }
     }
 
+    // 构建传送门并存储
     buildPortals(portals) {
         portals.forEach(portal => {
             const entry = new ScenePortal({
@@ -123,6 +127,7 @@ export class GridScene extends Phaser.Scene {
         });
     }
 
+    // 玩家出生点与传送门进入处理
     buildPlayer(sceneData) {
         const entryPortal = this.entryPortalName
             ? this.portals.get(this.entryPortalName)
@@ -138,6 +143,7 @@ export class GridScene extends Phaser.Scene {
             tileY: spawn.y
         });
 
+        // 进入后按方向迈出一步
         if (entryPortal?.enterDirection) {
             const [dx, dy] = entryPortal.enterDirection;
             if (dx || dy) {
@@ -164,6 +170,7 @@ export class GridScene extends Phaser.Scene {
         });
     }
 
+    // 相机跟随与边界
     setupCamera() {
         const camera = this.cameras.main;
         camera.setBounds(
@@ -176,6 +183,7 @@ export class GridScene extends Phaser.Scene {
         camera.setZoom(this.zoomLevels[this.zoomLevel]);
     }
 
+    // PageUp/PageDown 切换缩放档位
     setupZoomControls() {
         this.input.keyboard.on("keydown-PAGEUP", event => {
             event.preventDefault();

@@ -1,3 +1,4 @@
+// 所有格子对象的基础类
 export class GridObject {
     constructor({
         scene,
@@ -26,6 +27,7 @@ export class GridObject {
         this.disabled = false;
         this.offsetY = offsetY;
 
+        // 视觉与逻辑分离：逻辑使用 tileX/tileY
         this.sprite = scene.add.sprite(0, 0, texture, frame);
         this.sprite.setOrigin(0.5, 0.5);
         this.placeAt(tileX, tileY);
@@ -33,6 +35,7 @@ export class GridObject {
         world.addObject(this);
     }
 
+    // 放置到指定瓦片
     placeAt(tileX, tileY) {
         this.tileX = tileX;
         this.tileY = tileY;
@@ -46,6 +49,7 @@ export class GridObject {
         this.sprite.setFrame(frame);
     }
 
+    // 禁用/隐藏（用于拾取物持久化）
     setDisabled(disabled) {
         this.disabled = disabled;
         this.sprite.setVisible(!disabled);

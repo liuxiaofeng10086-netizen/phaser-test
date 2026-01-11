@@ -1,3 +1,4 @@
+// 8 方向 A* 寻路方向表（含对角）
 const DIRECTIONS = [
     { x: 0, y: 1, cost: 1 },
     { x: 1, y: 0, cost: 1 },
@@ -11,6 +12,7 @@ const DIRECTIONS = [
 
 const keyOf = (x, y) => `${x},${y}`;
 
+// 使用对角距离作为启发函数
 const heuristic = (a, b) => {
     const dx = Math.abs(a.x - b.x);
     const dy = Math.abs(a.y - b.y);
@@ -19,6 +21,7 @@ const heuristic = (a, b) => {
     return Math.SQRT2 * diag + (straight - 2 * diag);
 };
 
+// 基于网格的 A*，返回去掉起点后的路径
 export function findPath(grid, start, goal) {
     const height = grid.length;
     const width = grid[0]?.length ?? 0;
@@ -71,6 +74,7 @@ export function findPath(grid, start, goal) {
             if (nx < 0 || ny < 0 || nx >= width || ny >= height) continue;
             if (grid[ny][nx] !== 0) continue;
 
+            // 禁止对角穿角
             if (dir.x !== 0 && dir.y !== 0) {
                 const sideA = grid[current.y][current.x + dir.x];
                 const sideB = grid[current.y + dir.y][current.x];

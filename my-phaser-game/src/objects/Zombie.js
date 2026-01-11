@@ -2,6 +2,7 @@ import { CHARACTER_OFFSET_Y } from "../config";
 import { OBJECT_FRAMES } from "../data/frames";
 import { GridMover } from "./GridMover";
 
+// 僵尸 AI：距离触发寻路追逐
 export class Zombie extends GridMover {
     constructor({ scene, world, tileX, tileY, chaseDistance = 3, target }) {
         super({
@@ -33,6 +34,7 @@ export class Zombie extends GridMover {
                 const dy = Math.abs(this.target.tileY - this.tileY);
                 const distance = dx + dy;
 
+                // 曼哈顿距离触发追逐
                 if (distance <= this.chaseDistance && distance > 0) {
                     const path = this.world.findPath(
                         { x: this.tileX, y: this.tileY },
@@ -52,6 +54,7 @@ export class Zombie extends GridMover {
             }
         }
 
+        // 呼吸/抖动动效
         if (!this.isMoving) {
             const breath = 1 + Math.sin(time / 240) / 20;
             this.sprite.setScale(1, breath);

@@ -1,3 +1,4 @@
+// 轻量全局状态，用于跨场景共享
 export const gameState = {
     player: {
         hp: 100,
@@ -9,6 +10,7 @@ export const gameState = {
     persisted: new Map()
 };
 
+// 持久化 key：场景 + 对象名
 export const makePersistKey = (sceneId, name) => `${sceneId}:${name}`;
 
 export const getPersistedState = (sceneId, name) =>
