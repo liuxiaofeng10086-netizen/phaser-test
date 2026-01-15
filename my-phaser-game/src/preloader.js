@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { PLAYER_FRAMES } from "./data/frames";
 
 // 预加载 R3F 迁移所需的资源，并在此处创建动画。
 export class Preloader extends Phaser.Scene {
@@ -45,10 +46,10 @@ export class Preloader extends Phaser.Scene {
     }
 
     createAnimations() {
-        // 玩家走路动画
+        // 玩家走路动画 - 使用 frames.js 中的配置
         this.anims.create({
             key: "player-walk",
-            frames: this.anims.generateFrameNumbers("player", { frames: [7, 8] }),
+            frames: this.anims.generateFrameNumbers("player", { frames: PLAYER_FRAMES.walk }),
             frameRate: 4,
             repeat: -1
         });
@@ -56,7 +57,7 @@ export class Preloader extends Phaser.Scene {
         // 僵尸走路动画（使用 objects 图集）
         this.anims.create({
             key: "zombie-walk",
-            frames: this.anims.generateFrameNumbers("objects", { frames: [18, 17] }),
+            frames: this.anims.generateFrameNumbers("objects", { frames: [10, 10] }),
             frameRate: 4,
             repeat: -1
         });
@@ -64,8 +65,11 @@ export class Preloader extends Phaser.Scene {
         // 脚印特效动画
         this.anims.create({
             key: "footstep",
-            frames: this.anims.generateFrameNumbers("footstep", { frames: [0, 2] }),
-            frameRate: 7,
+            frames: this.anims.generateFrameNumbers("footstep", {
+                start: 0,
+                end: 2
+              }),
+            frameRate: 4,
             repeat: 0
         });
     }
